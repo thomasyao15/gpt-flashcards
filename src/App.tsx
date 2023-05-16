@@ -54,7 +54,7 @@ export const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <Container
-        minWidth={900}
+        maxW="container.xl"
         pt={5}
         justifyContent={"center"}
         display="flex"
@@ -81,11 +81,21 @@ export const App = () => {
         <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
           Suggested Cards
         </Heading>
-        <Grid templateColumns="repeat(3, 1fr)" gap={6} width="100%" mt={8}>
+        <Grid
+          templateColumns={{
+            base: "repeat(1, 1fr)", // default: 1 column
+            md: "repeat(2, 1fr)", // 2 columns on md breakpoint
+            lg: "repeat(3, 1fr)", // 3 columns on lg breakpoint
+            xl: "repeat(4, 1fr)", // 4 columns on xl breakpoint
+          }}
+          gap={6}
+          width="100%"
+          mt={8}
+        >
           {cards
             .filter((card) => card.status === "suggested")
             .map((card, index) => (
-              <Card maxW="sm" key={card.uuid} p={1}>
+              <Card key={card.uuid} p={1}>
                 <CardBody>
                   <Stack spacing="3">
                     <Heading size="md">{card.topic}</Heading>
@@ -128,11 +138,21 @@ export const App = () => {
         <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
           Accepted Cards
         </Heading>
-        <Grid templateColumns="repeat(3, 1fr)" gap={6} width="100%" mt={8}>
+        <Grid
+          templateColumns={{
+            base: "repeat(1, 1fr)", // default: 1 column
+            md: "repeat(2, 1fr)", // 2 columns on md breakpoint
+            lg: "repeat(3, 1fr)", // 3 columns on lg breakpoint
+            xl: "repeat(4, 1fr)", // 4 columns on xl breakpoint
+          }}
+          gap={6}
+          width="100%"
+          mt={8}
+        >
           {cards
             .filter((card) => card.status === "accepted")
             .map((card, index) => (
-              <Card maxW="sm" key={card.uuid} p={1}>
+              <Card key={card.uuid} p={1}>
                 <CardBody>
                   <Stack spacing="3">
                     <Heading size="md">{card.topic}</Heading>
