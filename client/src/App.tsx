@@ -19,6 +19,8 @@ import { useState } from "react";
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const [content, setContent] = useState("");
+
   const [cards, setCards] = useState([
     {
       uuid: "1",
@@ -51,6 +53,8 @@ export const App = () => {
     setCards(newCards);
   };
 
+  const handleGenerate = async () => {};
+
   return (
     <ChakraProvider theme={theme}>
       <Container
@@ -77,7 +81,12 @@ export const App = () => {
         <Textarea
           placeholder="Enter content to generate flashcards here"
           height={300}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
+        <Button mt={5} colorScheme="pink">
+          Generate Flashcards
+        </Button>
         <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
           Suggested Cards
         </Heading>
