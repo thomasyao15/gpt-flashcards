@@ -74,6 +74,32 @@ export const App = () => {
     }
   };
 
+  const handleCopyMarkdown = () => {
+    const acceptedCards = cards.filter((card) => card.status === "accepted");
+
+    if (acceptedCards.length === 0) {
+      console.log("No accepted cards to copy.");
+      return;
+    }
+
+    let markdown = "";
+    acceptedCards.forEach((card) => {
+      markdown += `Topic: ${card.topic}\n`;
+      markdown += `Q: **${card.question}**\n`;
+      markdown += `A: {${card.answer}}\n\n`;
+    });
+
+    // Copy the markdown to the clipboard
+    navigator.clipboard
+      .writeText(markdown)
+      .then(() => {
+        console.log("Markdown copied to clipboard:", markdown);
+      })
+      .catch((error) => {
+        console.error("Failed to copy markdown to clipboard:", error);
+      });
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <Container
@@ -219,7 +245,12 @@ export const App = () => {
               </Card>
             ))}
         </Grid>
-        <Button mt={10} mb={20} colorScheme="purple">
+        <Button
+          mt={10}
+          mb={20}
+          colorScheme="purple"
+          onClick={handleCopyMarkdown}
+        >
           Copy markdown to clipboard
         </Button>
       </Container>
