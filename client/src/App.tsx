@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [content, setContent] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [cards, setCards] = useState([
     {
@@ -57,6 +58,8 @@ export const App = () => {
 
   const handleGenerate = async () => {
     console.log("Generating flashcards");
+    setIsLoading(true); // Set isLoading to true
+
     try {
       const response = await axios.post("http://localhost:5050/generateCards", {
         content: content,
@@ -71,6 +74,8 @@ export const App = () => {
       setCards([...cards, ...generatedCards]);
     } catch (error) {
       console.error("Failed to generate flashcards:", error);
+    } finally {
+      setIsLoading(false); // Set isLoading back to false
     }
   };
 
@@ -129,7 +134,13 @@ export const App = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <Button mt={5} colorScheme="pink" onClick={handleGenerate}>
+        <Button
+          mt={5}
+          colorScheme="pink"
+          onClick={handleGenerate}
+          isLoading={isLoading}
+          loadingText="Generating"
+        >
           Generate Flashcards
         </Button>
         <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
