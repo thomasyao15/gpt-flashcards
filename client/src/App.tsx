@@ -16,6 +16,8 @@ import {
   CardFooter,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -55,6 +57,21 @@ export const App = () => {
 
   const handleGenerate = async () => {
     console.log("Generating flashcards");
+    try {
+      const response = await axios.post("http://localhost:5050/generateCards", {
+        content: content,
+      });
+
+      const generatedCards = response.data.map((card: object) => ({
+        ...card,
+        uuid: uuidv4(),
+        status: "suggested",
+      }));
+
+      setCards([...cards, ...generatedCards]);
+    } catch (error) {
+      console.error("Failed to generate flashcards:", error);
+    }
   };
 
   return (

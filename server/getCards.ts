@@ -120,16 +120,19 @@ function handleError(
 }
 
 function generateSummaryPrompt(content: string) {
-  return `Generate flashcards for the following markdown content below. You only speak JSON. The flashcards should be bite sized - ideal for anki. Return the cards in an array in a json object in the exact following structure:
+  return `Generate TINY flashcards for the following markdown content below.
+You must split each point into multiple TINY flashcards (max 2 sentence answers). 
+You must also reword the information and add extra information to make the flashcards more useful.
 
-Required response structure:
+Return the cards in an array in a json object in the exact following structure.
+Required response structure (you only speak JSON):
 
 {
 "flashcards": [
 {
 topic: "The topic of the flashcard (1-3 words)",
-question: "The question of the flashcard (1-2 sentences)",
-answer: "The answer of the flashcard (1-3 sentences)"
+question: "The question of the flashcard (1 SINGLE QUESTION)",
+answer: "The answer of the flashcard (1-2 sentences)"
 },
 {
 topic: "Dijkstra's algorithm",
