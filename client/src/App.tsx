@@ -33,7 +33,7 @@ export const App = () => {
     },
     {
       uuid: "2",
-      topic: "Temp of sun",
+      topic: "Temperature of the sun",
       question: "What is the temperature of the sun?",
       answer: "The temperature of the sun is 5,778 K.",
       status: "accepted",

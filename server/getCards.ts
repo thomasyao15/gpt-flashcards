@@ -127,7 +127,6 @@ You must:
 3. split each point into multiple TINY flashcards (max 2 sentence answers).
 
 E.g. if the content is:
-So many issues with single point of failure - you could have the entire building burn down. So instead they have availability zones in amazon
 * So you now need to do geography based load balancing, so depending on your geography, the DNS level LB might route you to the IP of a web server LB in another building
 
 Return the cards in an array in a json object in the exact following structure.
@@ -141,16 +140,6 @@ Required response structure (you only speak JSON):
 "answer": "The answer of the flashcard (1-2 sentences)"
 },
 {
-"topic": "Single point of failure",
-"question": "What is the issue with having a single point of failure?",
-"answer": "A single point of failure means that if that one component fails, the entire system will fail. For example, if the building with the server burns down, the system will be down. To avoid this, availability zones are used in Amazon."
-},
-{
-"topic": "Availability zones",
-"question": "What is an availability zone in Amazon?",
-"answer": "
-An availability zone in AWS is a physically separate data center within a region that is engineered to be isolated from failures in other availability zones, providing redundancy and fault tolerance. It allows users to distribute their applications across multiple availability zones to ensure high availability and resiliency."
-},
 "topic": "Geography based load balancing",
 "question": "What is geography based load balancing?",
 "answer": "Geography based load balancing is when the DNS level load balancer routes you to the IP of a web server load balancer in another building, depending on your geography."
