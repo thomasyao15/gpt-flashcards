@@ -1,6 +1,4 @@
 import {
-  ChakraProvider,
-  theme,
   useColorMode,
   Button,
   Container,
@@ -106,165 +104,158 @@ export const App = () => {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Container
-        maxW="container.xl"
-        pt={5}
-        justifyContent={"center"}
-        display="flex"
-        flexDirection="column"
+    <Container
+      maxW="container.xl"
+      pt={5}
+      justifyContent={"center"}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+    >
+      <Flex
+        justifyContent="space-between"
+        width="100%"
         alignItems="center"
+        mb={10}
       >
-        <Flex
-          justifyContent="space-between"
-          width="100%"
-          alignItems="center"
-          mb={10}
-        >
-          <Heading as="h1" fontSize={25} color="blue.400">
-            GPT Flashcards
-          </Heading>
-          <Button onClick={toggleColorMode}>
-            {colorMode === "light" ? "Dark" : "Light"}
-          </Button>
-        </Flex>
-        <Textarea
-          placeholder="Enter content to generate flashcards here"
-          height={300}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <Button
-          mt={5}
-          colorScheme="pink"
-          onClick={handleGenerate}
-          isLoading={isLoading}
-          loadingText="Generating"
-        >
-          Generate Flashcards
-        </Button>
-        <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
-          Suggested Cards
+        <Heading as="h1" fontSize={25} color="blue.400">
+          GPT Flashcards
         </Heading>
-        <Grid
-          templateColumns={{
-            base: "repeat(1, 1fr)", // default: 1 column
-            md: "repeat(2, 1fr)", // 2 columns on md breakpoint
-            lg: "repeat(3, 1fr)", // 3 columns on lg breakpoint
-            xl: "repeat(4, 1fr)", // 4 columns on xl breakpoint
-          }}
-          gap={6}
-          width="100%"
-          mt={8}
-        >
-          {cards
-            .filter((card) => card.status === "suggested")
-            .map((card) => (
-              <Card key={card.uuid} p={1}>
-                <CardBody>
-                  <Stack spacing="3">
-                    <Heading size="md">{card.topic}</Heading>
-                    <Text>
-                      <Text as="span" fontWeight="bold" color="blue.400">
-                        Q:
-                      </Text>{" "}
-                      {card.question}
-                    </Text>
-                    <Text>
-                      <Text as="span" fontWeight="bold" color="blue.400">
-                        A:
-                      </Text>{" "}
-                      {card.answer}
-                    </Text>
-                  </Stack>
-                </CardBody>
-                <CardFooter>
-                  <ButtonGroup display="flex" width="100%">
-                    <Button
-                      fontSize={13}
-                      width={"50%"}
-                      onClick={() => handleRemove(card.uuid)}
-                    >
-                      Remove
-                    </Button>
-                    <Button
-                      fontSize={13}
-                      colorScheme="blue"
-                      width={"50%"}
-                      onClick={() => handleStatusChange(card.uuid, "accepted")}
-                    >
-                      Accept
-                    </Button>
-                  </ButtonGroup>
-                </CardFooter>
-              </Card>
-            ))}
-        </Grid>
-        <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
-          Accepted Cards
-        </Heading>
-        <Grid
-          templateColumns={{
-            base: "repeat(1, 1fr)", // default: 1 column
-            md: "repeat(2, 1fr)", // 2 columns on md breakpoint
-            lg: "repeat(3, 1fr)", // 3 columns on lg breakpoint
-            xl: "repeat(4, 1fr)", // 4 columns on xl breakpoint
-          }}
-          gap={6}
-          width="100%"
-          mt={8}
-        >
-          {cards
-            .filter((card) => card.status === "accepted")
-            .map((card) => (
-              <Card key={card.uuid} p={1}>
-                <CardBody>
-                  <Stack spacing="3">
-                    <Heading size="md">{card.topic}</Heading>
-                    <Text>
-                      <Text as="span" fontWeight="bold" color="blue.400">
-                        Q:
-                      </Text>{" "}
-                      {card.question}
-                    </Text>
-                    <Text>
-                      <Text as="span" fontWeight="bold" color="blue.400">
-                        A:
-                      </Text>{" "}
-                      {card.answer}
-                    </Text>
-                  </Stack>
-                </CardBody>
-                <CardFooter>
-                  <ButtonGroup display="flex" width="100%">
-                    <Button
-                      fontSize={13}
-                      width={"50%"}
-                      onClick={() => handleRemove(card.uuid)}
-                    >
-                      Remove
-                    </Button>
-                    <Button
-                      fontSize={13}
-                      width={"50%"}
-                      onClick={() => handleStatusChange(card.uuid, "suggested")}
-                    >
-                      Unaccept
-                    </Button>
-                  </ButtonGroup>
-                </CardFooter>
-              </Card>
-            ))}
-        </Grid>
-        <Button
-          mt={10}
-          mb={20}
-          colorScheme="purple"
-          onClick={handleCopyMarkdown}
-        >
-          Copy markdown to clipboard
+        <Button onClick={toggleColorMode}>
+          {colorMode === "light" ? "Dark" : "Light"}
         </Button>
-      </Container>
-    </ChakraProvider>
+      </Flex>
+      <Textarea
+        placeholder="Enter content to generate flashcards here"
+        height={300}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+      <Button
+        mt={5}
+        colorScheme="pink"
+        onClick={handleGenerate}
+        isLoading={isLoading}
+        loadingText="Generating"
+      >
+        Generate Flashcards
+      </Button>
+      <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
+        Suggested Cards
+      </Heading>
+      <Grid
+        templateColumns={{
+          base: "repeat(1, 1fr)", // default: 1 column
+          md: "repeat(2, 1fr)", // 2 columns on md breakpoint
+          lg: "repeat(3, 1fr)", // 3 columns on lg breakpoint
+          xl: "repeat(4, 1fr)", // 4 columns on xl breakpoint
+        }}
+        gap={6}
+        width="100%"
+        mt={8}
+      >
+        {cards
+          .filter((card) => card.status === "suggested")
+          .map((card) => (
+            <Card key={card.uuid} p={1}>
+              <CardBody>
+                <Stack spacing="3">
+                  <Heading size="md">{card.topic}</Heading>
+                  <Text>
+                    <Text as="span" fontWeight="bold" color="blue.400">
+                      Q:
+                    </Text>{" "}
+                    {card.question}
+                  </Text>
+                  <Text>
+                    <Text as="span" fontWeight="bold" color="blue.400">
+                      A:
+                    </Text>{" "}
+                    {card.answer}
+                  </Text>
+                </Stack>
+              </CardBody>
+              <CardFooter>
+                <ButtonGroup display="flex" width="100%">
+                  <Button
+                    fontSize={13}
+                    width={"50%"}
+                    onClick={() => handleRemove(card.uuid)}
+                  >
+                    Remove
+                  </Button>
+                  <Button
+                    fontSize={13}
+                    colorScheme="blue"
+                    width={"50%"}
+                    onClick={() => handleStatusChange(card.uuid, "accepted")}
+                  >
+                    Accept
+                  </Button>
+                </ButtonGroup>
+              </CardFooter>
+            </Card>
+          ))}
+      </Grid>
+      <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
+        Accepted Cards
+      </Heading>
+      <Grid
+        templateColumns={{
+          base: "repeat(1, 1fr)", // default: 1 column
+          md: "repeat(2, 1fr)", // 2 columns on md breakpoint
+          lg: "repeat(3, 1fr)", // 3 columns on lg breakpoint
+          xl: "repeat(4, 1fr)", // 4 columns on xl breakpoint
+        }}
+        gap={6}
+        width="100%"
+        mt={8}
+      >
+        {cards
+          .filter((card) => card.status === "accepted")
+          .map((card) => (
+            <Card key={card.uuid} p={1}>
+              <CardBody>
+                <Stack spacing="3">
+                  <Heading size="md">{card.topic}</Heading>
+                  <Text>
+                    <Text as="span" fontWeight="bold" color="blue.400">
+                      Q:
+                    </Text>{" "}
+                    {card.question}
+                  </Text>
+                  <Text>
+                    <Text as="span" fontWeight="bold" color="blue.400">
+                      A:
+                    </Text>{" "}
+                    {card.answer}
+                  </Text>
+                </Stack>
+              </CardBody>
+              <CardFooter>
+                <ButtonGroup display="flex" width="100%">
+                  <Button
+                    fontSize={13}
+                    width={"50%"}
+                    onClick={() => handleRemove(card.uuid)}
+                  >
+                    Remove
+                  </Button>
+                  <Button
+                    fontSize={13}
+                    width={"50%"}
+                    onClick={() => handleStatusChange(card.uuid, "suggested")}
+                  >
+                    Unaccept
+                  </Button>
+                </ButtonGroup>
+              </CardFooter>
+            </Card>
+          ))}
+      </Grid>
+      <Button mt={10} mb={20} colorScheme="purple" onClick={handleCopyMarkdown}>
+        Copy markdown to clipboard
+      </Button>
+    </Container>
   );
 };

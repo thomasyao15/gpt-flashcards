@@ -120,9 +120,15 @@ function handleError(
 }
 
 function generateSummaryPrompt(content: string) {
-  return `Generate TINY flashcards for the following markdown content below.
-You must split each point into multiple TINY flashcards (max 2 sentence answers). 
-You must also reword the information and add extra information to make the flashcards more useful.
+  return `Analyse and fix/add new information to the markdown content below, then generate MANY TINY flashcards from it.
+You must:
+1. reword the information and add extra information to make the flashcards more useful.
+2. generate new flashcards for any new information you add.
+3. split each point into multiple TINY flashcards (max 2 sentence answers).
+
+E.g. if the content is:
+So many issues with single point of failure - you could have the entire building burn down. So instead they have availability zones in amazon
+* So you now need to do geography based load balancing, so depending on your geography, the DNS level LB might route you to the IP of a web server LB in another building
 
 Return the cards in an array in a json object in the exact following structure.
 Required response structure (you only speak JSON):
@@ -135,14 +141,29 @@ question: "The question of the flashcard (1 SINGLE QUESTION)",
 answer: "The answer of the flashcard (1-2 sentences)"
 },
 {
-topic: "Dijkstra's algorithm",
-question: "What is Dijkstra's algorithm?",
-answer: "Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph."
+topic: "Single point of failure",
+question: "What is the issue with having a single point of failure?",
+answer: "A single point of failure means that if that one component fails, the entire system will fail. For example, if the building with the server burns down, the system will be down. To avoid this, availability zones are used in Amazon."
 },
 {
-topic: "Temperature of sun",
-question: "What is the temperature of the sun?",
-answer: "The temperature of the sun is 5,778 K."
+topic: "Availability zones",
+question: "What is an availability zone in Amazon?",
+answer: "
+An availability zone in AWS is a physically separate data center within a region that is engineered to be isolated from failures in other availability zones, providing redundancy and fault tolerance. It allows users to distribute their applications across multiple availability zones to ensure high availability and resiliency."
+},
+topic: "Geography based load balancing",
+question: "What is geography based load balancing?",
+answer: "Geography based load balancing is when the DNS level load balancer routes you to the IP of a web server load balancer in another building, depending on your geography."
+},
+{
+topic: "Load balancer",
+question: "What is a load balancer?",
+answer: "A load balancer is a device that acts as a reverse proxy and distributes network or application traffic across a number of servers."
+},
+{
+topic: "Reverse proxy",
+question: "What is a reverse proxy?",
+answer: "A reverse proxy is a server that sits in front of web servers and forwards client (e.g. web browser) requests to those web servers. Reverse proxies are typically implemented to help increase security, performance, and reliability."
 }
 ]
 }
