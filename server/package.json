@@ -9,5 +9,8 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/node": "^20.1.5"
+  },
+  "scripts": {
+    "start": "tsc && node dist/server.js"
   }
 }
