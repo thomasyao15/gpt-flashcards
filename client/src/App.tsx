@@ -7,15 +7,11 @@ import {
   Textarea,
   Text,
   Grid,
-  Stack,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import Flashcard from "./components/Flashcard";
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -162,44 +158,13 @@ export const App = () => {
         {cards
           .filter((card) => card.status === "suggested")
           .map((card) => (
-            <Card key={card.uuid} p={1}>
-              <CardBody>
-                <Stack spacing="3">
-                  <Heading size="md">{card.topic}</Heading>
-                  <Text>
-                    <Text as="span" fontWeight="bold" color="blue.400">
-                      Q:
-                    </Text>{" "}
-                    {card.question}
-                  </Text>
-                  <Text>
-                    <Text as="span" fontWeight="bold" color="blue.400">
-                      A:
-                    </Text>{" "}
-                    {card.answer}
-                  </Text>
-                </Stack>
-              </CardBody>
-              <CardFooter>
-                <ButtonGroup display="flex" width="100%">
-                  <Button
-                    fontSize={13}
-                    width={"50%"}
-                    onClick={() => handleRemove(card.uuid)}
-                  >
-                    Remove
-                  </Button>
-                  <Button
-                    fontSize={13}
-                    colorScheme="blue"
-                    width={"50%"}
-                    onClick={() => handleStatusChange(card.uuid, "accepted")}
-                  >
-                    Accept
-                  </Button>
-                </ButtonGroup>
-              </CardFooter>
-            </Card>
+            <Flashcard
+              key={card.uuid}
+              card={card}
+              handleRemove={handleRemove}
+              handleStatusChange={handleStatusChange}
+              accepted={false}
+            />
           ))}
       </Grid>
       <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
@@ -219,43 +184,13 @@ export const App = () => {
         {cards
           .filter((card) => card.status === "accepted")
           .map((card) => (
-            <Card key={card.uuid} p={1}>
-              <CardBody>
-                <Stack spacing="3">
-                  <Heading size="md">{card.topic}</Heading>
-                  <Text>
-                    <Text as="span" fontWeight="bold" color="blue.400">
-                      Q:
-                    </Text>{" "}
-                    {card.question}
-                  </Text>
-                  <Text>
-                    <Text as="span" fontWeight="bold" color="blue.400">
-                      A:
-                    </Text>{" "}
-                    {card.answer}
-                  </Text>
-                </Stack>
-              </CardBody>
-              <CardFooter>
-                <ButtonGroup display="flex" width="100%">
-                  <Button
-                    fontSize={13}
-                    width={"50%"}
-                    onClick={() => handleRemove(card.uuid)}
-                  >
-                    Remove
-                  </Button>
-                  <Button
-                    fontSize={13}
-                    width={"50%"}
-                    onClick={() => handleStatusChange(card.uuid, "suggested")}
-                  >
-                    Unaccept
-                  </Button>
-                </ButtonGroup>
-              </CardFooter>
-            </Card>
+            <Flashcard
+              key={card.uuid}
+              card={card}
+              handleRemove={handleRemove}
+              handleStatusChange={handleStatusChange}
+              accepted={true}
+            />
           ))}
       </Grid>
       <Button mt={10} mb={5} colorScheme="purple" onClick={handleCopyMarkdown}>
