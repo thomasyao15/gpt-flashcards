@@ -4,16 +4,20 @@ GPT Flashcards is a tool designed to generate flashcards based on markdown conte
 
 ![image](https://github.com/thomasyao15/gpt-flashcards/assets/64414639/e316fd21-9c73-40cb-97a0-957d04c642c8)
 
-
 ## Usage
 
 To use GPT Flashcards:
 
 1. Clone this repository to your local machine.
 2. Install the required dependencies by running `npm install` in both the `client` and `server` folders.
-3. Spin up the client page by running `npm start` in the `client` folder.
+3. Add the OPENAI_API_KEY environment variable to your system with your OpenAI API key. E.g. `export OPENAI_API_KEY=your-api-key`.
 4. Spin up the server by running `npm start` in the `server` folder.
-5. Add the OPENAI_API_KEY environment variable to your system with your OpenAI API key. E.g. `export OPENAI_API_KEY=your-api-key`.
+5. Visit https://thomasyao15.github.io/gpt-flashcards/ OR Spin up the client page by running `npm start` in the `client` folder.
+6. Enter your markdown content into the text area and click "Generate Flashcards".
+
+## Creating changes
+
+Use `npm run deploy` to deploy changes to github pages.
 
 ## Client
 
