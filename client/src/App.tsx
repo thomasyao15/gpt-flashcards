@@ -7,6 +7,7 @@ import {
   Textarea,
   Text,
   Grid,
+  Card,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -192,6 +193,11 @@ export const App = () => {
             />
           ))}
       </Grid>
+      {cards.filter((card) => card.status === "suggested").length === 0 && (
+        <Card p={4} boxShadow="md">
+          <Text>No suggested cards so far</Text>
+        </Card>
+      )}
       <ClearCardsModal
         isOpen={showClearModal}
         onClose={handleClearModalClose}
@@ -232,6 +238,11 @@ export const App = () => {
             />
           ))}
       </Grid>
+      {cards.filter((card) => card.status === "accepted").length === 0 && (
+        <Card p={4} boxShadow="md">
+          <Text>No accepted cards so far</Text>
+        </Card>
+      )}
       <Button mt={10} mb={5} colorScheme="purple" onClick={handleCopyMarkdown}>
         Copy markdown to clipboard
       </Button>
