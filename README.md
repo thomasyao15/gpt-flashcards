@@ -2,6 +2,9 @@
 
 GPT Flashcards is a tool designed to generate flashcards based on markdown content. It provides a simple way to create flashcards in markdown format, which can be easily converted into Anki cards using the Obsidian to Anki plugin.
 
+![image](https://github.com/thomasyao15/gpt-flashcards/assets/64414639/e316fd21-9c73-40cb-97a0-957d04c642c8)
+
+
 ## Usage
 
 To use GPT Flashcards:
