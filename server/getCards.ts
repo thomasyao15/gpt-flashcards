@@ -9,8 +9,8 @@ export async function getCards(rawContent: string) {
   const encodedTranscript = encode(rawContent);
   const stringsArray = splitTranscript(encodedTranscript, 1000);
   const resultsArray = await sendToChat(stringsArray);
-  const finalFlashcardsArray = cleanAndCombine(resultsArray);
-  return finalFlashcardsArray;
+  const flashcardsResult = cleanAndCombine(resultsArray);
+  return flashcardsResult;
 }
 
 function splitTranscript(encodedTranscript: number[], maxTokens: number) {
@@ -136,34 +136,34 @@ Required response structure (you only speak JSON):
 {
 "flashcards": [
 {
-topic: "The topic of the flashcard (1-3 words)",
-question: "The question of the flashcard (1 SINGLE QUESTION)",
-answer: "The answer of the flashcard (1-2 sentences)"
+"topic": "The topic of the flashcard (1-3 words)",
+"question": "The question of the flashcard (1 SINGLE QUESTION)",
+"answer": "The answer of the flashcard (1-2 sentences)"
 },
 {
-topic: "Single point of failure",
-question: "What is the issue with having a single point of failure?",
-answer: "A single point of failure means that if that one component fails, the entire system will fail. For example, if the building with the server burns down, the system will be down. To avoid this, availability zones are used in Amazon."
+"topic": "Single point of failure",
+"question": "What is the issue with having a single point of failure?",
+"answer": "A single point of failure means that if that one component fails, the entire system will fail. For example, if the building with the server burns down, the system will be down. To avoid this, availability zones are used in Amazon."
 },
 {
-topic: "Availability zones",
-question: "What is an availability zone in Amazon?",
-answer: "
+"topic": "Availability zones",
+"question": "What is an availability zone in Amazon?",
+"answer": "
 An availability zone in AWS is a physically separate data center within a region that is engineered to be isolated from failures in other availability zones, providing redundancy and fault tolerance. It allows users to distribute their applications across multiple availability zones to ensure high availability and resiliency."
 },
-topic: "Geography based load balancing",
-question: "What is geography based load balancing?",
-answer: "Geography based load balancing is when the DNS level load balancer routes you to the IP of a web server load balancer in another building, depending on your geography."
+"topic": "Geography based load balancing",
+"question": "What is geography based load balancing?",
+"answer": "Geography based load balancing is when the DNS level load balancer routes you to the IP of a web server load balancer in another building, depending on your geography."
 },
 {
-topic: "Load balancer",
-question: "What is a load balancer?",
-answer: "A load balancer is a device that acts as a reverse proxy and distributes network or application traffic across a number of servers."
+"topic": "Load balancer",
+"question": "What is a load balancer?",
+"answer": "A load balancer is a device that acts as a reverse proxy and distributes network or application traffic across a number of servers."
 },
 {
-topic: "Reverse proxy",
-question: "What is a reverse proxy?",
-answer: "A reverse proxy is a server that sits in front of web servers and forwards client (e.g. web browser) requests to those web servers. Reverse proxies are typically implemented to help increase security, performance, and reliability."
+"topic": "Reverse proxy",
+"question": "What is a reverse proxy?",
+"answer": "A reverse proxy is a server that sits in front of web servers and forwards client (e.g. web browser) requests to those web servers. Reverse proxies are typically implemented to help increase security, performance, and reliability."
 }
 ]
 }
@@ -195,13 +195,20 @@ function cleanAndCombine(rawResults: any[]) {
 
     let jsonObj;
     try {
+      console.error(
+        "================================= CLEANED JSON STRING ================================="
+      );
+      console.error(cleanedJsonString);
+      console.error(
+        "================================= END JSON STRING ================================="
+      );
       jsonObj = JSON.parse(cleanedJsonString);
     } catch (error) {
       console.error("Error while parsing cleaned JSON string:");
       console.error(error);
-      console.log("Original JSON string:", jsonString);
-      console.log(cleanedJsonString);
-      console.log("Cleaned JSON string:", cleanedJsonString);
+      // console.log("Original JSON string:", jsonString);
+      // console.log(cleanedJsonString);
+      // console.log("Cleaned JSON string:", cleanedJsonString);
       jsonObj = {};
     }
 
@@ -216,12 +223,14 @@ function cleanAndCombine(rawResults: any[]) {
   }
 
   const finalFlashcardsArray = [];
+  let totalTokens = 0;
 
   for (let flashCardsObj of cleanedResultsArray) {
     try {
       for (let flashcard of flashCardsObj.choice.flashcards) {
         finalFlashcardsArray.push(flashcard);
       }
+      totalTokens += flashCardsObj.usage;
     } catch (error) {
       console.error("Error while pushing flashcards to final array:");
       console.error(error);
@@ -231,5 +240,8 @@ function cleanAndCombine(rawResults: any[]) {
   console.log("======= Final flashcards array =======");
   console.log(finalFlashcardsArray);
 
-  return finalFlashcardsArray;
+  return {
+    flashcards: finalFlashcardsArray,
+    totalTokens: totalTokens,
+  };
 }

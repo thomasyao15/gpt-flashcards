@@ -1,0 +1,149 @@
+{
+  "flashcards": [
+    {
+      "topic": "Email filtering",
+      "question": "What percentage of emails do computers filter out?",
+      "answer": "Computers filter out more than 60% of emails."
+    },
+    {
+      "topic": "Machine learning",
+      "question": "What is the core of data modelling in data science projects?",
+      "answer": "Machine learning is the core of data modelling in data science projects."
+    },
+    {
+      "topic": "Data science",
+      "question": "What are the three primary techniques of importance to a data scientist?",
+      "answer": "Classification, clustering, and regression (prediction) are of primary importance to a data scientist."
+    },
+    {
+      "topic": "Modelling phase",
+      "question": "What are the four steps of the modelling phase?",
+      "answer": "The modelling phase consists of four steps: feature engineering and model selection, training the model, model validation and selection, and applying the trained model to unseen data."
+    },
+    {
+      "topic": "Good model",
+      "question": "What are the characteristics of a good model?",
+      "answer": "A good model has good predictive power and generalizes well to data it hasn’t seen."
+    },
+    {
+      "topic": "Validation strategies",
+      "question": "What are some validation strategies for machine learning models?",
+      "answer": "Validation strategies for machine learning models include dividing data into a training set and a holdout data set, k-folds cross validation, and leave-1 out."
+    },
+    {
+      "topic": "Predicting new observations",
+      "question": "What is the process for predicting new observations?",
+      "answer": "Predicting new observations involves preparing a data set with features defined by the model and applying the model to the new data set."
+    },
+    {
+      "topic": "Types of machine learning",
+      "question": "What are the three types of machine learning?",
+      "answer": "Machine learning techniques can be divided into supervised learning, unsupervised learning, and semi-supervised learning."
+    },
+    {
+      "topic": "Classification",
+      "question": "What is classification?",
+      "answer": "Classification is the problem of identifying to which of a set of categories a new observation belongs, and is considered an instance of supervised learning."
+    },
+    {
+      "topic": "k-Nearest Neighbors algorithm",
+      "question": "What is the k-Nearest Neighbors algorithm?",
+      "answer": "The k-Nearest Neighbors algorithm is a simple yet powerful algorithm to categorize observations into classes."
+    },
+    {
+      "topic": "Flattening arrays",
+      "question": "How do you flatten a two-dimensional array into a list?",
+      "answer": "The k-nearest neighbors classifier requires a list of values, but pl.matshow() returns a two-dimensional array. To flatten it into a list, reshape() needs to be called on digits.images."
+    },
+    {
+      "topic": "Reducing dimensions",
+      "question": "What happens when the number of dimensions is reduced from two to one?",
+      "answer": "Once the number of dimensions is reduced from two to one, it becomes a standard classification problem. The contents of an image are passed into the classifier along with a training data set to learn how to predict the numbers in the images."
+    },
+    {
+      "topic": "Testing the model",
+      "question": "What happens after the program has gone through the training set and built the model?",
+      "answer": "After the program has gone through the training set and built the model, the test set of data is passed to see how well it has learned to interpret the images using the model."
+    },
+    {
+      "topic": "Confusion matrix",
+      "question": "What is a confusion matrix?",
+      "answer": "The end result of the code is a confusion matrix that shows how often the number predicted was the correct number on the main diagonal and also in the matrix entry (i,j), where j was predicted but the image showed i."
+    },
+    {
+      "topic": "KNeighborsClassifier",
+      "question": "What is the sklearn.neighbors.KNeighborsClassifier used for?",
+      "answer": "The sklearn.neighbors.KNeighborsClassifier is used to select the target variable, prepare data, split into test set and training set, fit the data, predict on unseen data, and create a confusion matrix."
+    },
+    {
+      "topic": "High dimensional vectors",
+      "question": "What is a small p value useful for?",
+      "answer": "For high dimensional vectors, a small p value might be better."
+    },
+    {
+      "topic": "Decision trees",
+      "question": "What are decision trees?",
+      "answer": "Decision trees are a type of supervised learning algorithm used for classification problems."
+    },
+    {
+      "topic": "Significant variable",
+      "question": "What does a decision tree identify?",
+      "answer": "A decision tree identifies the most significant variable and the value of the variable that gives the best homogeneous sets of population."
+    },
+    {
+      "topic": "Purity of node",
+      "question": "What increases with respect to the target variable?",
+      "answer": "The purity of the node increases with respect to the target variable."
+    },
+    {
+      "topic": "Gini index",
+      "question": "What is the Gini index?",
+      "answer": "The Gini index is a commonly used algorithm in decision trees."
+    },
+    {
+      "topic": "Categorical target variables",
+      "question": "What type of target variables do decision trees work with?",
+      "answer": "Decision trees work with categorical target variables and perform only binary splits."
+    },
+    {
+      "topic": "Binary splits",
+      "question": "What method is used to create binary splits in decision trees?",
+      "answer": "The Gini method is used to create binary splits in decision trees."
+    },
+    {
+      "topic": "Gini index calculation",
+      "question": "What does Gini index calculation involve?",
+      "answer": "Gini index calculation involves calculating Gini for sub-nodes and for split using the weighted Gini score of each node of that split."
+    },
+    {
+      "topic": "Overfitting",
+      "question": "What is one of the key challenges faced while modelling decision trees?",
+      "answer": "Overfitting is one of the key challenges faced while modelling decision trees."
+    },
+    {
+      "topic": "Tree size constraints",
+      "question": "How can constraints be set on tree size?",
+      "answer": "Setting constraints on tree size can be done by using various parameters which are used to define a tree."
+    },
+    {
+      "topic": "Data exploration",
+      "question": "What are some advantages of decision trees?",
+      "answer": "Decision trees are easy to understand and require less data cleaning compared to other modeling techniques. Decision trees can handle both numerical and categorical variables, and are useful in data exploration."
+    },
+    {
+      "topic": "Overfitting in decision trees",
+      "question": "How can overfitting be solved in decision tree models?",
+      "answer": "Overfitting is a common problem with decision tree models, but can be solved by setting constraints on model parameters."
+    },
+    {
+      "topic": "Continuous numerical variables",
+      "question": "Are decision trees fit for continuous numerical variables?",
+      "answer": "Decision trees are not fit for continuous numerical variables."
+    },
+    {
+      "topic": "Visualizing decision trees",
+      "question": "What tool can be used to visualize decision trees?",
+      "answer": "Graphviz can be used to visualize decision trees."
+    }
+  ]
+}

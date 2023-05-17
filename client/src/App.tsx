@@ -21,6 +21,7 @@ export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [totalTokensUsed, setTotalTokensUsed] = useState(0);
 
   const [cards, setCards] = useState([
     {
@@ -63,13 +64,17 @@ export const App = () => {
         content: content,
       });
 
-      const generatedCards = response.data.map((card: object) => ({
+      const generatedCards = response.data.flashcards.map((card: object) => ({
         ...card,
         uuid: uuidv4(),
         status: "suggested",
       }));
-
       setCards([...cards, ...generatedCards]);
+
+      const tokensUsed = response.data.totalTokens;
+      setTotalTokensUsed(
+        (prevTotalTokensUsed) => prevTotalTokensUsed + tokensUsed
+      );
     } catch (error) {
       console.error("Failed to generate flashcards:", error);
     } finally {
@@ -253,9 +258,12 @@ export const App = () => {
             </Card>
           ))}
       </Grid>
-      <Button mt={10} mb={20} colorScheme="purple" onClick={handleCopyMarkdown}>
+      <Button mt={10} mb={5} colorScheme="purple" onClick={handleCopyMarkdown}>
         Copy markdown to clipboard
       </Button>
+      <Text fontSize={13} mb={20} color="gray.500">
+        Total tokens used: {totalTokensUsed}
+      </Text>
     </Container>
   );
 };
