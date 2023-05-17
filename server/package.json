@@ -2,9 +2,10 @@
   "dependencies": {
     "express": "^4.18.2",
     "gpt-3-encoder": "^1.1.4",
-    "openai": "^3.2.1"
+    "openai": "^3.2.1",
+    "typescript": "^5.0.4"
   },
-  "type": "module",
+  "type": "commonjs",
   "devDependencies": {
     "@types/node": "^20.1.5"
   }

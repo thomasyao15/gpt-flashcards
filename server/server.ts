@@ -2,7 +2,7 @@ import express from "express";
 import { getCards } from "./getCards";
 
 const app = express();
-const port = 5000;
+const port = 5050;
 
 // Middleware to parse JSON requests
 app.use(express.json());

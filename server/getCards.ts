@@ -155,6 +155,8 @@ function removeTrailingCommas(jsonString: string) {
 }
 
 function cleanAndCombine(rawResults: any[]) {
+  console.log("======= Cleaning results =======");
+
   const cleanedResultsArray = [];
 
   for (let rawResult of rawResults) {
@@ -201,6 +203,9 @@ function cleanAndCombine(rawResults: any[]) {
       console.error(error);
     }
   }
+
+  console.log("======= Final flashcards array =======");
+  console.log(finalFlashcardsArray);
 
   return finalFlashcardsArray;
 }
