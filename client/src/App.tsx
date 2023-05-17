@@ -12,13 +12,14 @@ import { useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Flashcard from "./components/Flashcard";
+import ClearCardsModal from "./components/ClearCardsModal";
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [totalTokensUsed, setTotalTokensUsed] = useState(0);
-
+  const [showClearModal, setShowClearModal] = useState(false);
   const [cards, setCards] = useState([
     {
       uuid: "1",
@@ -37,6 +38,18 @@ export const App = () => {
     },
   ]);
 
+  const handleClearModalOpen = () => {
+    setShowClearModal(true);
+  };
+
+  const handleClearModalClose = () => {
+    setShowClearModal(false);
+  };
+
+  const handleClearCards = () => {
+    setCards([]);
+  };
+
   const handleStatusChange = (uuid: string, status: string) => {
     const newCards = [...cards];
     const targetCardIdx = newCards.findIndex((card) => card.uuid === uuid);
@@ -51,9 +64,20 @@ export const App = () => {
     setCards(newCards);
   };
 
-  const handleGenerate = async () => {
+  const handleClickGenerate = () => {
+    if (cards.length > 0) {
+      handleClearModalOpen(); // Show the modal
+    } else {
+      generate();
+    }
+  };
+
+  const generate = async () => {
     console.log("Generating flashcards");
     setIsLoading(true); // Set isLoading to true
+
+    // set a 500ms delay before generating the flashcards
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
       const response = await axios.post("http://localhost:5050/generateCards", {
@@ -65,7 +89,8 @@ export const App = () => {
         uuid: uuidv4(),
         status: "suggested",
       }));
-      setCards([...cards, ...generatedCards]);
+
+      setCards((prevCards) => [...prevCards, ...generatedCards]);
 
       const tokensUsed = response.data.totalTokens;
       setTotalTokensUsed(
@@ -135,7 +160,7 @@ export const App = () => {
       <Button
         mt={5}
         colorScheme="pink"
-        onClick={handleGenerate}
+        onClick={handleClickGenerate}
         isLoading={isLoading}
         loadingText="Generating"
       >
@@ -167,6 +192,20 @@ export const App = () => {
             />
           ))}
       </Grid>
+      <ClearCardsModal
+        isOpen={showClearModal}
+        onClose={handleClearModalClose}
+        onDelete={() => {
+          handleClearCards();
+          handleClearModalClose();
+          generate();
+        }}
+        onKeep={() => {
+          handleClearModalClose();
+          generate();
+        }}
+      />
+
       <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
         Accepted Cards
       </Heading>
