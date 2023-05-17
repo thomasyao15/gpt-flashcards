@@ -24,5 +24,6 @@ yarn-error.log*
 
 server/node_modules
 client/node_modules
+docs/node_modules
 
 server/dist
