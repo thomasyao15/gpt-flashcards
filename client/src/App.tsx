@@ -53,7 +53,9 @@ export const App = () => {
     setCards(newCards);
   };
 
-  const handleGenerate = async () => {};
+  const handleGenerate = async () => {
+    console.log("Generating flashcards");
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -84,7 +86,7 @@ export const App = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <Button mt={5} colorScheme="pink">
+        <Button mt={5} colorScheme="pink" onClick={handleGenerate}>
           Generate Flashcards
         </Button>
         <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
@@ -103,7 +105,7 @@ export const App = () => {
         >
           {cards
             .filter((card) => card.status === "suggested")
-            .map((card, index) => (
+            .map((card) => (
               <Card key={card.uuid} p={1}>
                 <CardBody>
                   <Stack spacing="3">
@@ -160,7 +162,7 @@ export const App = () => {
         >
           {cards
             .filter((card) => card.status === "accepted")
-            .map((card, index) => (
+            .map((card) => (
               <Card key={card.uuid} p={1}>
                 <CardBody>
                   <Stack spacing="3">
