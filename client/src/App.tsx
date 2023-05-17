@@ -8,6 +8,7 @@ import {
   Text,
   Grid,
   Card,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -38,6 +39,8 @@ export const App = () => {
       status: "accepted",
     },
   ]);
+
+  const toast = useToast();
 
   const handleClearModalOpen = () => {
     setShowClearModal(true);
@@ -97,8 +100,21 @@ export const App = () => {
       setTotalTokensUsed(
         (prevTotalTokensUsed) => prevTotalTokensUsed + tokensUsed
       );
+
+      toast({
+        title: "Generation Successful",
+        status: "success",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
     } catch (error) {
       console.error("Failed to generate flashcards:", error);
+      toast({
+        title: "Generation Failed",
+        status: "error",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false); // Set isLoading back to false
     }
@@ -124,9 +140,21 @@ export const App = () => {
       .writeText(markdown)
       .then(() => {
         console.log("Markdown copied to clipboard:", markdown);
+        toast({
+          title: "Markdown Copied",
+          status: "success",
+          duration: 3000, // 3 seconds
+          isClosable: true,
+        });
       })
       .catch((error) => {
         console.error("Failed to copy markdown to clipboard:", error);
+        toast({
+          title: "Copying Failed",
+          status: "error",
+          duration: 3000, // 3 seconds
+          isClosable: true,
+        });
       });
   };
 
