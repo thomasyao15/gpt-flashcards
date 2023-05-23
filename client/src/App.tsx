@@ -130,7 +130,6 @@ export const App = () => {
 
     let markdown = "";
     acceptedCards.forEach((card) => {
-      markdown += `Topic: ${card.topic}\n`;
       markdown += `Q: **${card.question}**\n`;
       markdown += `A: {${card.answer}}\n\n`;
     });
@@ -156,6 +155,46 @@ export const App = () => {
           isClosable: true,
         });
       });
+  };
+
+  const handleGenerateReverseCards = async () => {
+    const acceptedCards = cards.filter((card) => card.status === "accepted");
+    const acceptedMarkdown = acceptedCards
+      .map((card) => `Q: **${card.question}**\nA: {${card.answer}}`)
+      .join("\n\n");
+
+    try {
+      const response = await fetch("http://localhost:5050/getReverseCards", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        body: acceptedMarkdown,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate reverse cards");
+      }
+
+      const reverseCards = await response.json();
+      setCards([...cards, ...reverseCards]);
+
+      toast({
+        title: "Reverse Cards Generated",
+        status: "success",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast({
+        title: "Failed to Generate Reverse Cards",
+        status: "error",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -273,6 +312,9 @@ export const App = () => {
       )}
       <Button mt={10} mb={5} colorScheme="purple" onClick={handleCopyMarkdown}>
         Copy markdown to clipboard
+      </Button>
+      <Button mb={5} colorScheme="twitter" onClick={handleGenerateReverseCards}>
+        Generate reverse accepted cards
       </Button>
       <Text fontSize={13} mb={20} color="gray.500">
         Total tokens used: {totalTokensUsed}
