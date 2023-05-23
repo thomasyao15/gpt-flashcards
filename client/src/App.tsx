@@ -164,6 +164,8 @@ export const App = () => {
       .join("\n\n");
 
     try {
+      setIsLoading(true); // Set the state to loading
+
       const response = await axios.post("http://localhost:5050/getReverseCards", {
         content: acceptedMarkdown,
       });
@@ -196,6 +198,8 @@ export const App = () => {
         duration: 3000, // 3 seconds
         isClosable: true,
       });
+    } finally {
+      setIsLoading(false); // Set the state back to not loading
     }
   };
 
@@ -315,7 +319,13 @@ export const App = () => {
       <Button mt={10} mb={5} colorScheme="purple" onClick={handleCopyMarkdown}>
         Copy markdown to clipboard
       </Button>
-      <Button mb={5} colorScheme="twitter" onClick={handleGenerateReverseCards}>
+      <Button
+        mb={5}
+        colorScheme="twitter"
+        onClick={handleGenerateReverseCards}
+        isLoading={isLoading}
+        loadingText="Generating"
+      >
         Generate reverse accepted cards
       </Button>
       <Text fontSize={13} mb={20} color="gray.500">
