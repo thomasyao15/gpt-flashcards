@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } from "openai";
 import { encode, decode } from "gpt-3-encoder";
 
 const openAIkey = process.env.OPENAI_API_KEY;
@@ -12,6 +12,15 @@ export async function getCards(rawContent: string) {
   const flashcardsResult = cleanAndCombine(resultsArray);
   return flashcardsResult;
 }
+
+export async function getReverseCards(rawContent: string) {
+  const encodedMarkdown = encode(rawContent);
+  const stringsArray = splitTranscript(encodedMarkdown, 1000);
+  const resultsArray = await sendReverseToChat(stringsArray);
+  const flashcardsResult = cleanAndCombine(resultsArray);
+  return flashcardsResult;
+}
+
 
 function splitTranscript(encodedTranscript: number[], maxTokens: number) {
   const stringsArray = [];
@@ -44,8 +53,8 @@ function splitTranscript(encodedTranscript: number[], maxTokens: number) {
     console.log("Chunk number " + (stringsArray.indexOf(chunk) + 1) + ":");
     console.log(
       chunk.slice(0, 100) +
-        "..." +
-        chunk.slice(chunk.length - 100, chunk.length)
+      "..." +
+      chunk.slice(chunk.length - 100, chunk.length)
     );
     console.log(chunk.length);
   }
@@ -53,18 +62,44 @@ function splitTranscript(encodedTranscript: number[], maxTokens: number) {
   return stringsArray;
 }
 
-async function sendToChat(stringsArray: string[]) {
+async function sendReverseToChat(stringsArray: string[]) {
   console.log("======= Analyse chunks =======");
   const resultsArray = [];
 
   for (let arr of stringsArray) {
     console.log(
-      `Analysing chunk ${stringsArray.indexOf(arr) + 1} of ${
-        stringsArray.length
+      `Analysing chunk ${stringsArray.indexOf(arr) + 1} of ${stringsArray.length
       }...`
     );
-    const prompt = generateSummaryPrompt(arr);
-    const completion = await exponentialBackoffGPTRequest(prompt);
+    const messages = [
+      {
+        role: ChatCompletionRequestMessageRoleEnum.System,
+        content:
+          "You are an assistant that only speaks JSON. Do not write normal text.",
+      },
+      { role: ChatCompletionRequestMessageRoleEnum.User, content: generateReversePrompt(arr) },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant, content: `{
+"flashcards": [
+{
+"topic": "Dijkstra's algorithm",
+"question": "What is the term for an algorithm for finding the shortest paths between nodes in a graph? It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later?",
+"answer": "Dijkstra's algorithm"
+}
+]
+}`
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.User, content: `Q: **What is CP in the CAP theorem?**
+A: {CP stands for consistency and partition tolerance. It prioritises consistency over availability - it is a good choice if your business needs require atomic reads and writes. However, waiting for a response from the partitioned node might result in a timeout error.}`
+      },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.Assistant,
+        content: `{"flashcards": []}`
+      },
+      { role: ChatCompletionRequestMessageRoleEnum.User, content: arr }
+    ];
+    const completion = await exponentialBackoffGPTRequest(messages);
     if (completion) {
       resultsArray.push(completion);
     }
@@ -73,27 +108,78 @@ async function sendToChat(stringsArray: string[]) {
   return resultsArray;
 }
 
-async function exponentialBackoffGPTRequest(prompt: string) {
-  const retries = 6;
-  let delay = 10000; // Initial delay: 10 seconds
 
+function generateReversePrompt(content: string) {
+  return `Make "what is the term for ..." cards for these flashcards in markdown format, ONLY for cards that test for the terms of definitions. You must return it in this JSON structure. If there are no cards with terms, return an empty flashcard array in the JSON object.
+  
+E.g. Q: What is weak consistency?
+A: Weak consistency is a consistency model that allows for inconsistencies or stale data to exist temporarily in a distributed system. In this model, after a write operation, there is no guarantee that subsequent read operations will immediately reflect the updated value.
+
+IGNORE cards like this that don't test for terms:
+Q: What is the temperature of the sun?
+A: The temperature of the sun is 5,778 K.
+
+Example json response for reverse card:
+
+{
+"flashcards": [
+{
+"topic": "Weak consistency",
+"question": "What is the term for a consistency model that allows for inconsistencies or stale data to exist temporarily in a distributed system?",
+"answer": "Weak consistency"
+}
+]
+}
+  
+Now generate the reverse cards for these flashcards:
+
+Q: **What is Dijkstra's algorithm?**
+A: {Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.}
+
+Q: **What is the temperature of the sun?**
+A: {The temperature of the sun is 5,778 K.}
+`;
+}
+
+async function sendToChat(stringsArray: string[]) {
+  console.log("======= Analyse chunks =======");
+  const resultsArray = [];
+
+  for (let arr of stringsArray) {
+    console.log(
+      `Analysing chunk ${stringsArray.indexOf(arr) + 1} of ${stringsArray.length
+      }...`
+    );
+    const messages = [
+      { role: ChatCompletionRequestMessageRoleEnum.User, content: generateSummaryPrompt(arr) },
+      {
+        role: ChatCompletionRequestMessageRoleEnum.System,
+        content:
+          "You are an assistant that only speaks JSON. Do not write normal text.",
+      },
+    ];
+    const completion = await exponentialBackoffGPTRequest(messages);
+    if (completion) {
+      resultsArray.push(completion);
+    }
+  }
+
+  return resultsArray;
+}
+
+async function exponentialBackoffGPTRequest(messages: any[], retries = 6, delay = 10000) {
   for (let i = 0; i < retries; i++) {
     try {
       const completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [
-          { role: "user", content: prompt },
-          {
-            role: "system",
-            content:
-              "You are an assistant that only speaks JSON. Do not write normal text.",
-          },
-        ],
+        messages,
         temperature: 0.4,
       });
 
       return completion;
     } catch (error) {
+      console.error(error);
+
       await handleError(error, i, retries, delay);
       delay *= 2; // Double the delay for the next retry
     }

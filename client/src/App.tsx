@@ -164,20 +164,22 @@ export const App = () => {
       .join("\n\n");
 
     try {
-      const response = await fetch("http://localhost:5050/getReverseCards", {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain",
-        },
-        body: acceptedMarkdown,
+      const response = await axios.post("http://localhost:5050/getReverseCards", {
+        content: acceptedMarkdown,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate reverse cards");
-      }
+      const reverseCards = response.data.flashcards.map((card: object) => ({
+        ...card,
+        uuid: uuidv4(),
+        status: "suggested",
+      }));
 
-      const reverseCards = await response.json();
-      setCards([...cards, ...reverseCards]);
+      setCards((prevCards) => [...prevCards, ...reverseCards]);
+
+      const tokensUsed = response.data.totalTokens;
+      setTotalTokensUsed(
+        (prevTotalTokensUsed) => prevTotalTokensUsed + tokensUsed
+      );
 
       toast({
         title: "Reverse Cards Generated",
