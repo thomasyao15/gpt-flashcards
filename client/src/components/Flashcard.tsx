@@ -102,14 +102,14 @@ const Flashcard: React.FC<CardProps> = ({
         <Stack spacing="3" p={5}>
           <Box>
             <Text>
-              <Text as="span" fontWeight="bold" color="blue.400">
+              <Text as="span" fontWeight="bold" color={accepted ? "purple.400" : "blue.500"}>
                 Q:
               </Text>{" "}
               {!isEditing && (
                 <Text
                   as="span"
                   fontWeight="bold"
-                  color={accepted ? "white" : "pink.400"}
+                  color={accepted ? "purple.200" : "blue.200"}
                 >
                   {card.question}
                 </Text>
@@ -130,7 +130,7 @@ const Flashcard: React.FC<CardProps> = ({
 
           <Box>
             <Text>
-              <Text as="span" fontWeight="bold" color="blue.400">
+              <Text as="span" fontWeight="bold" color={accepted ? "purple.400" : "blue.500"}>
                 A:
               </Text>{" "}
               {!isEditing && (
