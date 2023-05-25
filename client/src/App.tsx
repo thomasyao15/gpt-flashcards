@@ -9,6 +9,7 @@ import {
   Grid,
   Card,
   useToast,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -126,6 +127,12 @@ export const App = () => {
 
     if (acceptedCards.length === 0) {
       console.log("No accepted cards to copy.");
+      toast({
+        title: "No Accepted Cards to Copy",
+        status: "info",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
       return;
     }
 
@@ -244,9 +251,18 @@ export const App = () => {
         <Heading as="h1" fontSize={25} color="blue.400">
           GPT Flashcards
         </Heading>
-        <Button onClick={toggleColorMode}>
-          {colorMode === "light" ? "Dark" : "Light"}
-        </Button>
+        <ButtonGroup>
+          {textareaHeight >= 400 && (
+            <Button onClick={() => {
+              setExpandTextarea(!expandTextarea)
+            }}>
+              {expandTextarea ? "Collapse Content" : "Expand Content"}
+            </Button>
+          )}
+          <Button onClick={toggleColorMode}>
+            {colorMode === "light" ? "Dark" : "Light"}
+          </Button>
+        </ButtonGroup>
       </Flex>
       <Textarea
         placeholder="Enter content to generate flashcards here"
@@ -254,17 +270,11 @@ export const App = () => {
         onChange={(e) => setContent(e.target.value)}
         ref={contentRef}
         transition="height none"
-        maxH={expandTextarea ? undefined : 300}
+        maxH={expandTextarea ? undefined : 400}
         minH={300}
         resize={"vertical"}
       />
-      {textareaHeight >= 500 && (
-        <Button mt={5} onClick={() => {
-          setExpandTextarea(!expandTextarea)
-        }}>
-          {expandTextarea ? "Collapse Content" : "Expand Content"}
-        </Button>
-      )}
+
       <Button
         mt={5}
         colorScheme="pink"
@@ -319,7 +329,6 @@ export const App = () => {
           generate();
         }}
       />
-
       <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
         Accepted Cards
       </Heading>
