@@ -44,7 +44,7 @@ const Flashcard: React.FC<CardProps> = ({
     setCards((prevCards: CardType[]) =>
       prevCards.map((c) =>
         c.uuid === card.uuid
-          ? { ...c, question: editedQuestion, answer: editedAnswer }
+          ? { ...c, question: editedQuestion.trim(), answer: editedAnswer.trim() }
           : c
       )
     );
@@ -90,9 +90,9 @@ const Flashcard: React.FC<CardProps> = ({
         <Box display={"flex"} justifyContent="space-between" alignItems="center" p={5}>
           <Text size="sm">{card.topic}</Text>
           {isEditing ? (
-            <Box>
-              <CheckIcon onClick={handleSave} cursor={"pointer"} mr={2} boxSize={4} color={"green.300"} />
-              <CloseIcon onClick={handleCancel} cursor={"pointer"} boxSize={3} color={"red.300"} />
+            <Box ml={1}>
+              <CloseIcon onClick={handleCancel} cursor={"pointer"} mr={2} boxSize={3} color={"red.300"} />
+              <CheckIcon onClick={handleSave} cursor={"pointer"} boxSize={4} color={"green.300"} />
             </Box>
           ) : (
             <EditIcon onClick={handleEdit} cursor={"pointer"} color={"gray.600"} />
