@@ -37,6 +37,7 @@ const Flashcard: React.FC<CardProps> = ({
 
   const handleEdit = () => {
     setIsEditing(true);
+    setTimeout(() => questionRef.current && questionRef.current.focus(), 0);
   };
 
   const handleSave = (): void => {
@@ -119,6 +120,11 @@ const Flashcard: React.FC<CardProps> = ({
               <Textarea
                 value={editedQuestion}
                 onChange={(e) => setEditedQuestion(e.target.value)}
+                onKeyDown={(e) => {
+                  if ((e.key === 'Enter') && (e.metaKey || e.ctrlKey)) {
+                    handleSave();
+                  }
+                }}
                 p="2"
                 mt={1}
                 minH={"unset"}
@@ -141,6 +147,11 @@ const Flashcard: React.FC<CardProps> = ({
               <Textarea
                 value={editedAnswer}
                 onChange={(e) => setEditedAnswer(e.target.value)}
+                onKeyDown={(e) => {
+                  if ((e.key === 'Enter') && (e.metaKey || e.ctrlKey)) {
+                    handleSave();
+                  }
+                }}
                 p="2"
                 mt={1}
                 minH={"unset"}
