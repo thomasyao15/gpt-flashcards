@@ -17,6 +17,25 @@ import { v4 as uuidv4 } from "uuid";
 import Flashcard from "./components/Flashcard";
 import ClearCardsModal from "./components/ClearCardsModal";
 import autosize from "autosize";
+import { CardType } from "./types";
+
+const defaultCards: CardType[] = [
+  {
+    uuid: "1",
+    topic: "Dijkstra's algorithm",
+    question: "What is Dijkstra's algorithm?",
+    answer:
+      "Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.",
+    status: "suggested",
+  },
+  {
+    uuid: "2",
+    topic: "Temperature of the sun",
+    question: "What is the temperature of the sun?",
+    answer: "The temperature of the sun is 5,778 K.",
+    status: "accepted",
+  },
+];
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -24,23 +43,31 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [totalTokensUsed, setTotalTokensUsed] = useState(0);
   const [showClearModal, setShowClearModal] = useState(false);
-  const [cards, setCards] = useState([
-    {
-      uuid: "1",
-      topic: "Dijkstra's algorithm",
-      question: "What is Dijkstra's algorithm?",
-      answer:
-        "Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.",
-      status: "suggested",
-    },
-    {
-      uuid: "2",
-      topic: "Temperature of the sun",
-      question: "What is the temperature of the sun?",
-      answer: "The temperature of the sun is 5,778 K.",
-      status: "accepted",
-    },
-  ]);
+  const [cards, setCards] = useState<CardType[]>(defaultCards);
+
+  // Load cards from localStorage when the app first loads
+  useEffect(() => {
+    try {
+      const savedCards = localStorage.getItem('cards');
+      if (savedCards) {
+        setCards(JSON.parse(savedCards));
+      }
+    } catch (error) {
+      console.error('Error while loading cards from localStorage:', error);
+    }
+  }, []);
+
+  // Save cards to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      if (cards !== defaultCards) {
+        localStorage.setItem('cards', JSON.stringify(cards));
+        console.log('Saved cards to localStorage: ', cards);
+      }
+    } catch (error) {
+      console.error('Error while saving cards to localStorage:', error);
+    }
+  }, [cards]);
 
   const toast = useToast();
 
