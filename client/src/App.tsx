@@ -9,12 +9,14 @@ import {
   Grid,
   Card,
   useToast,
+  ButtonGroup,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Flashcard from "./components/Flashcard";
 import ClearCardsModal from "./components/ClearCardsModal";
+import autosize from "autosize";
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -125,6 +127,12 @@ export const App = () => {
 
     if (acceptedCards.length === 0) {
       console.log("No accepted cards to copy.");
+      toast({
+        title: "No Accepted Cards to Copy",
+        status: "info",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
       return;
     }
 
@@ -202,10 +210,32 @@ export const App = () => {
       setIsLoading(false); // Set the state back to not loading
     }
   };
+  const [textareaHeight, setTextareaHeight] = useState<number>(0);
+  const [expandTextarea, setExpandTextarea] = useState<boolean>(false);
+
+  const contentRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(() => {
+    if (contentRef.current) {
+      autosize(contentRef.current);
+    }
+
+    return () => {
+      if (contentRef.current) {
+        autosize.destroy(contentRef.current);
+      }
+    };
+  }, [content, expandTextarea]);
+
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setTextareaHeight(contentRef.current.scrollHeight);
+    }
+  }, [contentRef, content]);
 
   return (
     <Container
-      maxW="container.xl"
+      maxW={1500}
       pt={5}
       justifyContent={"center"}
       display="flex"
@@ -221,16 +251,30 @@ export const App = () => {
         <Heading as="h1" fontSize={25} color="blue.400">
           GPT Flashcards
         </Heading>
-        <Button onClick={toggleColorMode}>
-          {colorMode === "light" ? "Dark" : "Light"}
-        </Button>
+        <ButtonGroup>
+          {textareaHeight >= 400 && (
+            <Button onClick={() => {
+              setExpandTextarea(!expandTextarea)
+            }}>
+              {expandTextarea ? "Collapse Content" : "Expand Content"}
+            </Button>
+          )}
+          <Button onClick={toggleColorMode}>
+            {colorMode === "light" ? "Dark" : "Light"}
+          </Button>
+        </ButtonGroup>
       </Flex>
       <Textarea
         placeholder="Enter content to generate flashcards here"
-        height={300}
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        ref={contentRef}
+        transition="height none"
+        maxH={expandTextarea ? undefined : 400}
+        minH={300}
+        resize={"vertical"}
       />
+
       <Button
         mt={5}
         colorScheme="pink"
@@ -263,6 +307,7 @@ export const App = () => {
               handleRemove={handleRemove}
               handleStatusChange={handleStatusChange}
               accepted={false}
+              setCards={setCards}
             />
           ))}
       </Grid>
@@ -284,7 +329,6 @@ export const App = () => {
           generate();
         }}
       />
-
       <Heading as="h1" fontSize={25} color="purple.300" mt={50}>
         Accepted Cards
       </Heading>
@@ -308,6 +352,7 @@ export const App = () => {
               handleRemove={handleRemove}
               handleStatusChange={handleStatusChange}
               accepted={true}
+              setCards={setCards}
             />
           ))}
       </Grid>
