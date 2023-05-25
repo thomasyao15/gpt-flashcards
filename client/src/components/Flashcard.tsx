@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Card,
   CardBody,
@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon, CloseIcon, CheckIcon } from "@chakra-ui/icons";
 import { CardType } from "../types";
+import autosize from "autosize";
 
 // Define the prop types for the Card component
 type CardProps = {
@@ -55,6 +56,34 @@ const Flashcard: React.FC<CardProps> = ({
     setEditedAnswer(card.answer);
   };
 
+  const answerRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(() => {
+    if (answerRef.current) {
+      autosize(answerRef.current);
+    }
+
+    return () => {
+      if (answerRef.current) {
+        autosize.destroy(answerRef.current);
+      }
+    };
+  }, [isEditing]);
+
+  const questionRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(() => {
+    if (questionRef.current) {
+      autosize(questionRef.current);
+    }
+
+    return () => {
+      if (questionRef.current) {
+        autosize.destroy(questionRef.current);
+      }
+    };
+  }, [isEditing]);
+
+
+
   return (
     <Card key={card.uuid} p={1}>
       <CardBody>
@@ -76,12 +105,7 @@ const Flashcard: React.FC<CardProps> = ({
               <Text as="span" fontWeight="bold" color="blue.400">
                 Q:
               </Text>{" "}
-              {isEditing ? (
-                <Textarea
-                  value={editedQuestion}
-                  onChange={(e) => setEditedQuestion(e.target.value)}
-                />
-              ) : (
+              {!isEditing && (
                 <Text
                   as="span"
                   fontWeight="bold"
@@ -91,6 +115,16 @@ const Flashcard: React.FC<CardProps> = ({
                 </Text>
               )}
             </Text>
+            {isEditing && (
+              <Textarea
+                value={editedQuestion}
+                onChange={(e) => setEditedQuestion(e.target.value)}
+                p="2"
+                minH={"unset"}
+                transition="height none"
+                ref={questionRef}
+              />
+            )}
           </Box>
 
           <Box>
@@ -106,36 +140,39 @@ const Flashcard: React.FC<CardProps> = ({
               <Textarea
                 value={editedAnswer}
                 onChange={(e) => setEditedAnswer(e.target.value)}
-                w={"100%"}
-                width={"100%"}
+                p="2"
+                minH={"unset"}
+                transition="height none"
+                ref={answerRef}
               />
             )}
           </Box>
         </Stack>
       </CardBody>
-      <CardFooter>
-        <ButtonGroup display="flex" width="100%">
-          <Button
-            fontSize={13}
-            width={"50%"}
-            onClick={() => handleRemove(card.uuid)}
-          >
-            Remove
-          </Button>
-          <Button
-            fontSize={13}
-            colorScheme={accepted ? "gray" : "blue"}
-            width={"50%"}
-            onClick={
-              accepted
-                ? () => handleStatusChange(card.uuid, "suggested")
-                : () => handleStatusChange(card.uuid, "accepted")
-            }
-          >
-            {accepted ? "Unaccept" : "Accept"}
-          </Button>
-        </ButtonGroup>
-      </CardFooter>
+      {!isEditing && (
+        <CardFooter>
+          <ButtonGroup display="flex" width="100%">
+            <Button
+              fontSize={13}
+              width={"50%"}
+              onClick={() => handleRemove(card.uuid)}
+            >
+              Remove
+            </Button>
+            <Button
+              fontSize={13}
+              colorScheme={accepted ? "gray" : "blue"}
+              width={"50%"}
+              onClick={
+                accepted
+                  ? () => handleStatusChange(card.uuid, "suggested")
+                  : () => handleStatusChange(card.uuid, "accepted")
+              }
+            >
+              {accepted ? "Unaccept" : "Accept"}
+            </Button>
+          </ButtonGroup>
+        </CardFooter>)}
     </Card>
   );
 };

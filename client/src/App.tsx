@@ -205,7 +205,7 @@ export const App = () => {
 
   return (
     <Container
-      maxW="container.xl"
+      maxW={1500}
       pt={5}
       justifyContent={"center"}
       display="flex"
