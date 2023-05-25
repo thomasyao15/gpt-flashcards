@@ -85,21 +85,21 @@ const Flashcard: React.FC<CardProps> = ({
 
 
   return (
-    <Card key={card.uuid} p={1}>
-      <CardBody>
-        <Stack spacing="3">
-          <Box display={"flex"} justifyContent="space-between" alignItems="center">
-            <Text size="sm">{card.topic}</Text>
-            {isEditing ? (
-              <Box>
-                <CheckIcon onClick={handleSave} cursor={"pointer"} mr={2} boxSize={4} color={"green.300"} />
-                <CloseIcon onClick={handleCancel} cursor={"pointer"} boxSize={3} color={"red.300"} />
-              </Box>
-            ) : (
-              <EditIcon onClick={handleEdit} cursor={"pointer"} color={"gray.600"} />
-            )}
-          </Box>
-          <Divider />
+    <Card key={card.uuid}>
+      <CardBody p={0}>
+        <Box display={"flex"} justifyContent="space-between" alignItems="center" p={5}>
+          <Text size="sm">{card.topic}</Text>
+          {isEditing ? (
+            <Box>
+              <CheckIcon onClick={handleSave} cursor={"pointer"} mr={2} boxSize={4} color={"green.300"} />
+              <CloseIcon onClick={handleCancel} cursor={"pointer"} boxSize={3} color={"red.300"} />
+            </Box>
+          ) : (
+            <EditIcon onClick={handleEdit} cursor={"pointer"} color={"gray.600"} />
+          )}
+        </Box>
+        <Divider />
+        <Stack spacing="3" p={5}>
           <Box>
             <Text>
               <Text as="span" fontWeight="bold" color="blue.400">
@@ -120,6 +120,7 @@ const Flashcard: React.FC<CardProps> = ({
                 value={editedQuestion}
                 onChange={(e) => setEditedQuestion(e.target.value)}
                 p="2"
+                mt={1}
                 minH={"unset"}
                 transition="height none"
                 ref={questionRef}
@@ -141,6 +142,7 @@ const Flashcard: React.FC<CardProps> = ({
                 value={editedAnswer}
                 onChange={(e) => setEditedAnswer(e.target.value)}
                 p="2"
+                mt={1}
                 minH={"unset"}
                 transition="height none"
                 ref={answerRef}
