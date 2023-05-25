@@ -300,6 +300,11 @@ export const App = () => {
         maxH={expandTextarea ? undefined : 400}
         minH={300}
         resize={"vertical"}
+        onKeyDown={(e) => {
+          if ((e.key === 'Enter') && (e.metaKey || e.ctrlKey)) {
+            handleClickGenerate();
+          }
+        }}
       />
 
       <Button
