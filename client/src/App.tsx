@@ -263,6 +263,7 @@ export const App = () => {
               handleRemove={handleRemove}
               handleStatusChange={handleStatusChange}
               accepted={false}
+              setCards={setCards}
             />
           ))}
       </Grid>
@@ -308,6 +309,7 @@ export const App = () => {
               handleRemove={handleRemove}
               handleStatusChange={handleStatusChange}
               accepted={true}
+              setCards={setCards}
             />
           ))}
       </Grid>
