@@ -10,11 +10,12 @@ import {
   Card,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Flashcard from "./components/Flashcard";
 import ClearCardsModal from "./components/ClearCardsModal";
+import autosize from "autosize";
 
 export const App = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -202,6 +203,28 @@ export const App = () => {
       setIsLoading(false); // Set the state back to not loading
     }
   };
+  const [textareaHeight, setTextareaHeight] = useState<number>(0);
+  const [expandTextarea, setExpandTextarea] = useState<boolean>(false);
+
+  const contentRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(() => {
+    if (contentRef.current) {
+      autosize(contentRef.current);
+    }
+
+    return () => {
+      if (contentRef.current) {
+        autosize.destroy(contentRef.current);
+      }
+    };
+  }, [content, expandTextarea]);
+
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setTextareaHeight(contentRef.current.scrollHeight);
+    }
+  }, [contentRef, content]);
 
   return (
     <Container
@@ -227,10 +250,21 @@ export const App = () => {
       </Flex>
       <Textarea
         placeholder="Enter content to generate flashcards here"
-        height={300}
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        ref={contentRef}
+        transition="height none"
+        maxH={expandTextarea ? undefined : 300}
+        minH={300}
+        resize={"vertical"}
       />
+      {textareaHeight >= 500 && (
+        <Button mt={5} onClick={() => {
+          setExpandTextarea(!expandTextarea)
+        }}>
+          {expandTextarea ? "Collapse Content" : "Expand Content"}
+        </Button>
+      )}
       <Button
         mt={5}
         colorScheme="pink"
