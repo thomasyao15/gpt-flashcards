@@ -59,9 +59,19 @@ const Flashcard: React.FC<CardProps> = ({
     <Card key={card.uuid} p={1}>
       <CardBody>
         <Stack spacing="3">
-          <Text size="sm">{card.topic}</Text>
+          <Box display={"flex"} justifyContent="space-between" alignItems="center">
+            <Text size="sm">{card.topic}</Text>
+            {isEditing ? (
+              <Box>
+                <CheckIcon onClick={handleSave} cursor={"pointer"} mr={2} boxSize={4} color={"green.300"} />
+                <CloseIcon onClick={handleCancel} cursor={"pointer"} boxSize={3} color={"red.300"} />
+              </Box>
+            ) : (
+              <EditIcon onClick={handleEdit} cursor={"pointer"} color={"gray.600"} />
+            )}
+          </Box>
           <Divider />
-          <Box display={"flex"} justifyContent="space-between">
+          <Box>
             <Text>
               <Text as="span" fontWeight="bold" color="blue.400">
                 Q:
@@ -81,28 +91,25 @@ const Flashcard: React.FC<CardProps> = ({
                 </Text>
               )}
             </Text>
-            <EditIcon onClick={handleEdit} />
           </Box>
-          <Box display={"flex"} justifyContent="space-between">
+
+          <Box>
             <Text>
               <Text as="span" fontWeight="bold" color="blue.400">
                 A:
               </Text>{" "}
-              {isEditing ? (
-                <Textarea
-                  value={editedAnswer}
-                  onChange={(e) => setEditedAnswer(e.target.value)}
-                />
-              ) : (
+              {!isEditing && (
                 card.answer
               )}
             </Text>
-            {isEditing ? (
-              <Box>
-                <CheckIcon onClick={handleSave} />
-                <CloseIcon onClick={handleCancel} />
-              </Box>
-            ) : null}
+            {isEditing && (
+              <Textarea
+                value={editedAnswer}
+                onChange={(e) => setEditedAnswer(e.target.value)}
+                w={"100%"}
+                width={"100%"}
+              />
+            )}
           </Box>
         </Stack>
       </CardBody>
