@@ -11,8 +11,8 @@ import {
   Textarea,
   Box,
 } from "@chakra-ui/react";
-import { ContextMenu } from 'chakra-ui-contextmenu';
-import { MenuList, MenuItem } from '@chakra-ui/menu';
+import { ContextMenu } from "chakra-ui-contextmenu";
+import { MenuList, MenuItem } from "@chakra-ui/menu";
 import { EditIcon, CloseIcon, CheckIcon } from "@chakra-ui/icons";
 import { CardType } from "../types";
 import autosize from "autosize";
@@ -36,6 +36,7 @@ const Flashcard: React.FC<CardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedQuestion, setEditedQuestion] = useState(card.question);
   const [editedAnswer, setEditedAnswer] = useState(card.answer);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -47,7 +48,11 @@ const Flashcard: React.FC<CardProps> = ({
     setCards((prevCards: CardType[]) =>
       prevCards.map((c) =>
         c.uuid === card.uuid
-          ? { ...c, question: editedQuestion.trim(), answer: editedAnswer.trim() }
+          ? {
+            ...c,
+            question: editedQuestion.trim(),
+            answer: editedAnswer.trim(),
+          }
           : c
       )
     );
@@ -88,12 +93,12 @@ const Flashcard: React.FC<CardProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!isEditing && !e.metaKey && !e.ctrlKey) {
       switch (e.key) {
-        case 'a':
+        case "a":
           accepted
             ? handleStatusChange(card.uuid, "suggested")
             : handleStatusChange(card.uuid, "accepted");
           break;
-        case 'r':
+        case "r":
           handleRemove(card.uuid);
           break;
         default:
@@ -110,25 +115,58 @@ const Flashcard: React.FC<CardProps> = ({
         </MenuList>
       )}
     >
-      {ref =>
-        <Card key={card.uuid} ref={ref} tabIndex={0} onKeyDown={handleKeyDown}>
+      {(ref) => (
+        <Card
+          key={card.uuid}
+          ref={ref}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onClick={() => ref.current?.focus()}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          boxShadow={isFocused ? "outline" : "none"}
+        >
           <CardBody p={0}>
-            <Box display={"flex"} justifyContent="space-between" alignItems="center" p={5}>
+            <Box
+              display={"flex"}
+              justifyContent="space-between"
+              alignItems="center"
+              p={5}
+            >
               <Text size="sm">{card.topic}</Text>
               {isEditing ? (
                 <Box ml={1}>
-                  <CloseIcon onClick={handleCancel} cursor={"pointer"} mr={2} boxSize={3} color={"red.300"} />
-                  <CheckIcon onClick={handleSave} cursor={"pointer"} boxSize={4} color={"green.300"} />
+                  <CloseIcon
+                    onClick={handleCancel}
+                    cursor={"pointer"}
+                    mr={2}
+                    boxSize={3}
+                    color={"red.300"}
+                  />
+                  <CheckIcon
+                    onClick={handleSave}
+                    cursor={"pointer"}
+                    boxSize={4}
+                    color={"green.300"}
+                  />
                 </Box>
               ) : (
-                <EditIcon onClick={handleEdit} cursor={"pointer"} color={"gray.600"} />
+                <EditIcon
+                  onClick={handleEdit}
+                  cursor={"pointer"}
+                  color={"gray.600"}
+                />
               )}
             </Box>
             <Divider />
             <Stack spacing="3" p={5}>
               <Box>
                 <Text>
-                  <Text as="span" fontWeight="bold" color={accepted ? "purple.400" : "blue.500"}>
+                  <Text
+                    as="span"
+                    fontWeight="bold"
+                    color={accepted ? "purple.400" : "blue.500"}
+                  >
                     Q:
                   </Text>{" "}
                   {!isEditing && (
@@ -146,7 +184,7 @@ const Flashcard: React.FC<CardProps> = ({
                     value={editedQuestion}
                     onChange={(e) => setEditedQuestion(e.target.value)}
                     onKeyDown={(e) => {
-                      if ((e.key === 'Enter') && (e.metaKey || e.ctrlKey)) {
+                      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                         handleSave();
                       }
                     }}
@@ -161,19 +199,21 @@ const Flashcard: React.FC<CardProps> = ({
 
               <Box>
                 <Text>
-                  <Text as="span" fontWeight="bold" color={accepted ? "purple.400" : "blue.500"}>
+                  <Text
+                    as="span"
+                    fontWeight="bold"
+                    color={accepted ? "purple.400" : "blue.500"}
+                  >
                     A:
                   </Text>{" "}
-                  {!isEditing && (
-                    card.answer
-                  )}
+                  {!isEditing && card.answer}
                 </Text>
                 {isEditing && (
                   <Textarea
                     value={editedAnswer}
                     onChange={(e) => setEditedAnswer(e.target.value)}
                     onKeyDown={(e) => {
-                      if ((e.key === 'Enter') && (e.metaKey || e.ctrlKey)) {
+                      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                         handleSave();
                       }
                     }}
@@ -212,9 +252,10 @@ const Flashcard: React.FC<CardProps> = ({
                   {accepted ? "Unaccept" : "Accept"}
                 </Button>
               </ButtonGroup>
-            </CardFooter>)}
+            </CardFooter>
+          )}
         </Card>
-      }
+      )}
     </ContextMenu>
   );
 };
