@@ -11,8 +11,6 @@ import {
   Textarea,
   Box,
 } from "@chakra-ui/react";
-import { ContextMenu } from "chakra-ui-contextmenu";
-import { MenuList, MenuItem } from "@chakra-ui/menu";
 import { EditIcon, CloseIcon, CheckIcon } from "@chakra-ui/icons";
 import { CardType } from "../types";
 import autosize from "autosize";
@@ -104,6 +102,10 @@ const Flashcard: React.FC<CardProps> = ({
           break;
         case "r":
           handleRemove(card.uuid);
+          break;
+        case "Enter":
+        case "e":
+          handleEdit();
           break;
         default:
           break;
@@ -198,6 +200,7 @@ const Flashcard: React.FC<CardProps> = ({
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                     handleSave();
+                    cardRef.current?.focus()
                   }
                 }}
                 p="2"
