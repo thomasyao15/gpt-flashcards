@@ -85,7 +85,22 @@ const Flashcard: React.FC<CardProps> = ({
     };
   }, [isEditing]);
 
-
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!isEditing && !e.metaKey && !e.ctrlKey) {
+      switch (e.key) {
+        case 'a':
+          accepted
+            ? handleStatusChange(card.uuid, "suggested")
+            : handleStatusChange(card.uuid, "accepted");
+          break;
+        case 'r':
+          handleRemove(card.uuid);
+          break;
+        default:
+          break;
+      }
+    }
+  };
 
   return (
     <ContextMenu<HTMLDivElement>
@@ -96,7 +111,7 @@ const Flashcard: React.FC<CardProps> = ({
       )}
     >
       {ref =>
-        <Card key={card.uuid} ref={ref}>
+        <Card key={card.uuid} ref={ref} tabIndex={0} onKeyDown={handleKeyDown}>
           <CardBody p={0}>
             <Box display={"flex"} justifyContent="space-between" alignItems="center" p={5}>
               <Text size="sm">{card.topic}</Text>
@@ -179,6 +194,7 @@ const Flashcard: React.FC<CardProps> = ({
                   fontSize={13}
                   width={"50%"}
                   onClick={() => handleRemove(card.uuid)}
+                  tabIndex={-1}
                 >
                   Remove
                 </Button>
@@ -191,6 +207,7 @@ const Flashcard: React.FC<CardProps> = ({
                       ? () => handleStatusChange(card.uuid, "suggested")
                       : () => handleStatusChange(card.uuid, "accepted")
                   }
+                  tabIndex={-1}
                 >
                   {accepted ? "Unaccept" : "Accept"}
                 </Button>
