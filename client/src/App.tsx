@@ -10,6 +10,7 @@ import {
   Card,
   useToast,
   ButtonGroup,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -307,15 +308,17 @@ export const App = () => {
         }}
       />
 
-      <Button
-        mt={5}
-        colorScheme="pink"
-        onClick={handleClickGenerate}
-        isLoading={isLoading}
-        loadingText="Generating"
-      >
-        Generate Flashcards
-      </Button>
+      <Tooltip label="Create flashcards based on the entered content above. Note: expect variations in behaviour with GPT-3.5" aria-label="Generate flashcards tooltip">
+        <Button
+          mt={5}
+          colorScheme="pink"
+          onClick={handleClickGenerate}
+          isLoading={isLoading}
+          loadingText="Generating"
+        >
+          Generate Flashcards
+        </Button>
+      </Tooltip>
       <Heading as="h1" fontSize={25} color="blue.400" mt={50}>
         Suggested Cards
       </Heading>
@@ -393,18 +396,30 @@ export const App = () => {
           <Text>No accepted cards so far</Text>
         </Card>
       )}
-      <Button mt={10} mb={5} colorScheme="purple" onClick={handleCopyMarkdown}>
-        Copy markdown to clipboard
-      </Button>
-      <Button
-        mb={5}
-        colorScheme="twitter"
-        onClick={handleGenerateReverseCards}
-        isLoading={isLoading}
-        loadingText="Generating"
-      >
-        Generate reverse accepted cards
-      </Button>
+      <ButtonGroup mt={10} mb={5}>
+        <Tooltip label="Create reverse cards using definitions as questions and terms as answers, based on the accepted cards only. Note: performance may be poor with GPT-3.5">
+          <Button
+            onClick={handleGenerateReverseCards}
+            isLoading={isLoading}
+            loadingText="Generating"
+            w={"full"}
+            paddingX={6}
+          >
+            Generate Reversals
+          </Button>
+        </Tooltip>
+        <Tooltip label="Copy all accepted flashcards in markdown format to the clipboard. Answers are wrapped with {} to automatically create Anki flashcards with the Obsidian-to-Anki plugin">
+          <Button
+            colorScheme="purple"
+            onClick={handleCopyMarkdown}
+            w={"full"}
+            paddingX={6}
+          >
+            Copy Markdown
+          </Button>
+        </Tooltip>
+      </ButtonGroup>
+
       <Text fontSize={13} mb={20} color="gray.500">
         Total tokens used: {totalTokensUsed}
       </Text>
