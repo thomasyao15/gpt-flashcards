@@ -208,6 +208,7 @@ const Flashcard: React.FC<CardProps> = ({
                 minH={"unset"}
                 transition="height none"
                 ref={questionRef}
+                onClick={(e) => e.stopPropagation()} // stop event from bubbling up to card
               />
             )}
           </Box>
@@ -230,6 +231,7 @@ const Flashcard: React.FC<CardProps> = ({
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                     handleSave();
+                    cardRef.current?.focus()
                   }
                 }}
                 p="2"
@@ -237,6 +239,7 @@ const Flashcard: React.FC<CardProps> = ({
                 minH={"unset"}
                 transition="height none"
                 ref={answerRef}
+                onClick={(e) => e.stopPropagation()} // stop event from bubbling up to card
               />
             )}
           </Box>
