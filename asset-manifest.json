@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/gpt-flashcards/static/js/main.52229c98.js",
+    "main.js": "/gpt-flashcards/static/js/main.f40c6b6d.js",
     "static/js/787.3b95ab17.chunk.js": "/gpt-flashcards/static/js/787.3b95ab17.chunk.js",
     "index.html": "/gpt-flashcards/index.html",
-    "main.52229c98.js.map": "/gpt-flashcards/static/js/main.52229c98.js.map",
+    "main.f40c6b6d.js.map": "/gpt-flashcards/static/js/main.f40c6b6d.js.map",
     "787.3b95ab17.chunk.js.map": "/gpt-flashcards/static/js/787.3b95ab17.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.52229c98.js"
+    "static/js/main.f40c6b6d.js"
   ]
 }
