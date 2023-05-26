@@ -42,7 +42,15 @@ const Flashcard: React.FC<CardProps> = ({
 
   const handleEdit = () => {
     setIsEditing(true);
-    setTimeout(() => questionRef.current && questionRef.current.focus(), 0);
+    setTimeout(() => {
+      if (questionRef.current && answerRef.current) {
+        questionRef.current.focus();
+        questionRef.current.selectionStart = questionRef.current.value.length;
+        questionRef.current.selectionEnd = questionRef.current.value.length;
+        answerRef.current.selectionStart = answerRef.current.value.length;
+        answerRef.current.selectionEnd = answerRef.current.value.length;
+      }
+    }, 0);
   };
 
   const handleSave = (): void => {
@@ -110,6 +118,8 @@ const Flashcard: React.FC<CardProps> = ({
         default:
           break;
       }
+    } else if (isEditing && e.metaKey && e.key === "Enter") {
+      handleSave();
     }
   };
 
@@ -199,7 +209,6 @@ const Flashcard: React.FC<CardProps> = ({
                 onChange={(e) => setEditedQuestion(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                    handleSave();
                     cardRef.current?.focus()
                   }
                 }}
@@ -230,7 +239,6 @@ const Flashcard: React.FC<CardProps> = ({
                 onChange={(e) => setEditedAnswer(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                    handleSave();
                     cardRef.current?.focus()
                   }
                 }}
