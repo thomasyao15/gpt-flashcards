@@ -45,6 +45,7 @@ export const App = () => {
   const [totalTokensUsed, setTotalTokensUsed] = useState(0);
   const [showClearModal, setShowClearModal] = useState(false);
   const [cards, setCards] = useState<CardType[]>(defaultCards);
+  const [focusedCard, setFocusedCard] = useState<string | null>(null);
 
   // Load cards from localStorage when the app first loads
   useEffect(() => {
@@ -63,7 +64,7 @@ export const App = () => {
     try {
       if (cards !== defaultCards) {
         localStorage.setItem('cards', JSON.stringify(cards));
-        console.log('Saved cards to localStorage: ', cards);
+        console.log('Saved cards to localStorage');
       }
     } catch (error) {
       console.error('Error while saving cards to localStorage:', error);
@@ -84,18 +85,48 @@ export const App = () => {
     setCards([]);
   };
 
+  // helper functions to focus on the next/prev card
+  const findNextCard = (currentIdx: number, status: string) => {
+    for (let i = currentIdx + 1; i < cards.length; i++) {
+      if (cards[i].status === status) {
+        return cards[i].uuid;
+      }
+    }
+    return null;
+  };
+  // helper functions to focus on the next/prev card
+  const findPrevCard = (currentIdx: number, status: string) => {
+    for (let i = currentIdx - 1; i >= 0; i--) {
+      if (cards[i].status === status) {
+        return cards[i].uuid;
+      }
+    }
+    return null;
+  };
+
   const handleStatusChange = (uuid: string, status: string) => {
     const newCards = [...cards];
     const targetCardIdx = newCards.findIndex((card) => card.uuid === uuid);
+    const oldStatus = newCards[targetCardIdx].status;
     newCards[targetCardIdx].status = status;
     setCards(newCards);
+
+    // Move focus to the next card with the same old status
+    const nextCard = findNextCard(targetCardIdx, oldStatus) || findPrevCard(targetCardIdx, oldStatus);
+    console.log("focusing on next card: ", nextCard);
+    setFocusedCard(nextCard);
   };
 
   const handleRemove = (uuid: string) => {
     const newCards = [...cards];
     const targetCardIdx = newCards.findIndex((card) => card.uuid === uuid);
+    const targetCardStatus = newCards[targetCardIdx].status;
     newCards.splice(targetCardIdx, 1);
     setCards(newCards);
+
+    // Move focus to the next card with the same status
+    const nextCard = findNextCard(targetCardIdx, targetCardStatus) || findPrevCard(targetCardIdx, targetCardStatus);
+    setFocusedCard(nextCard);
   };
 
   const handleClickGenerate = () => {
@@ -343,6 +374,8 @@ export const App = () => {
               handleStatusChange={handleStatusChange}
               accepted={false}
               setCards={setCards}
+              setFocusedCard={setFocusedCard}
+              focusedCard={focusedCard}
             />
           ))}
       </Grid>
@@ -388,6 +421,8 @@ export const App = () => {
               handleStatusChange={handleStatusChange}
               accepted={true}
               setCards={setCards}
+              setFocusedCard={setFocusedCard}
+              focusedCard={focusedCard}
             />
           ))}
       </Grid>
