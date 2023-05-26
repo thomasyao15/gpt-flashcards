@@ -17,6 +17,7 @@
     "@types/react-dom": "^18.2.4",
     "autosize": "^6.0.1",
     "axios": "^1.4.0",
+    "chakra-ui-contextmenu": "^1.0.5",
     "framer-motion": "^6.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
